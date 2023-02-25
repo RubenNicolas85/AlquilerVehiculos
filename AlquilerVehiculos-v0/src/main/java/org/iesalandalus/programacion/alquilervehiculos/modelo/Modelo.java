@@ -30,12 +30,12 @@ public class Modelo {
 	
 	public void insertar(Cliente cliente) throws Exception {
 		
-		clientes.insertar(new Cliente(cliente));
+		clientes.insertar(cliente);
 	}
 	
 	public void insertar(Turismo turismo) throws Exception {
 
-		turismos.insertar(new Turismo(turismo));
+		turismos.insertar(turismo);
 	}
 	
 	public void insertar(Alquiler alquiler) throws Exception  {
@@ -45,17 +45,7 @@ public class Modelo {
 			throw new NullPointerException("ERROR: No se puede realizar un alquiler nulo.");
 		}
 		
-		if(clientes.buscar(alquiler.getCliente()) == null) {
-			
-			throw new OperationNotSupportedException("ERROR: No existe el cliente del alquiler.");
-		}
-		
-		if(turismos.buscar(alquiler.getTurismo()) == null) {
-			
-			throw new OperationNotSupportedException("ERROR: No existe el turismo del alquiler.");
-		} 
-		
-		alquileres.insertar(new Alquiler(alquiler));
+		alquileres.insertar(alquiler);
 	}
 	
 	public Cliente buscar(Cliente cliente) {
@@ -86,7 +76,6 @@ public class Modelo {
 			
 		}else {
 			
-			alquiler.devolver(fechaDevolucion);
 			alquileres.devolver(alquiler, fechaDevolucion); 
 		}
 	}
@@ -97,18 +86,10 @@ public class Modelo {
 	
 	public void borrar(Cliente cliente) throws Exception {
 		
-		for (Alquiler alquiler : alquileres.get(cliente)) {
-			alquileres.borrar(alquiler);
-		}
-		
 		clientes.borrar(cliente);
 	}
 	
 	public void borrar(Turismo turismo) throws Exception {
-		
-		for (Alquiler alquiler : alquileres.get(turismo)) {
-			alquileres.borrar(alquiler);
-		}
 		
 		turismos.borrar(turismo);
 	}

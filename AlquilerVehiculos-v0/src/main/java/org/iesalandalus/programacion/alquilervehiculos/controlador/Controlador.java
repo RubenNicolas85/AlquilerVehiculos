@@ -22,29 +22,21 @@ public class Controlador {
 		if (vista == null) {
 			throw new IllegalArgumentException("ERROR: La vista no puede ser nula.");
 		}
+		
 		this.modelo = modelo;
 		this.vista = vista;
 		this.vista.setControlador(this);
 	}
 	
-	public void comenzar() {
+	/* El método comenzar del controlador, se encarga de invocar al método comenzar del 
+	 * modelo y de la vista, por lo que se creará de forma oculta al usuario todo el proceso
+	 * lógico y los arraylist para almacenar los objetos que creemos, y también la vista de
+	 * consola que nos pedirá los datos por teclado y mostrará los resultados por pantalla */
+	
+	public void comenzar() throws Exception {
 		
-		boolean error=false; 
-		
-		do {
-			try {
-				
-				error = false;
-				
-				modelo.comenzar();
-				vista.comenzar();
-			
-			}catch(Exception e) {
-			
-				System.out.println(e.getMessage());
-				error = true;
-			}
-		}while(error); 
+		modelo.comenzar();
+		vista.comenzar();
 	}
 	
 	public void terminar() {

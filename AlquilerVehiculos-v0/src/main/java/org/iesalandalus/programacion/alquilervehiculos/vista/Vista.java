@@ -1,9 +1,12 @@
 package org.iesalandalus.programacion.alquilervehiculos.vista;
 
+import java.time.LocalDate;
+
 import org.iesalandalus.programacion.alquilervehiculos.controlador.Controlador;
 import org.iesalandalus.programacion.alquilervehiculos.modelo.dominio.Alquiler;
 import org.iesalandalus.programacion.alquilervehiculos.modelo.dominio.Cliente;
 import org.iesalandalus.programacion.alquilervehiculos.modelo.dominio.Turismo;
+import org.iesalandalus.programacion.utilidades.Entrada;
 
 public class Vista {
 	
@@ -19,16 +22,24 @@ public class Vista {
 	
 	public void comenzar() throws Exception {
 		
-		boolean acabar=false; 
+		boolean error=false; 
 		
-			do{
-				acabar=false; 
+		do {
+			try {
+			
+				error = false;
 				
 				Consola.mostrarMenu();
-				System.out.println(); 
-				ejecutar(Consola.elegirOpcion()); 
-				
-			}while(acabar); 
+				System.out.println();
+				ejecutar(Consola.elegirOpcion());
+			
+			}catch(Exception e) {
+			
+				System.out.println(e.getMessage());
+				error = true;
+			}
+			
+		}while(error); 
 	}
 	
 	public void terminar() {
@@ -194,112 +205,320 @@ public class Vista {
 	}
 	
 	private void insertarCliente() throws Exception {
-		
+
 		Consola.mostrarCabecera("Ha elegido la opción: " + Opcion.INSERTAR_CLIENTE);
-		Cliente cliente = new Cliente(Consola.leerCliente());
-		controlador.insertar(cliente);
+
+		try {
+			Cliente cliente = new Cliente(Consola.leerCliente());
+			controlador.insertar(cliente);
+
+		} catch (Exception e) {
+
+			System.out.println(e.getMessage());
+		}
 	}
 		
 	private void insertarTurismo() throws Exception {
-		
+
 		Consola.mostrarCabecera("Ha elegido la opción: " + Opcion.INSERTAR_TURISMO);
-		Turismo turismo = new Turismo(Consola.leerTurismo());
-		controlador.insertar(turismo);
+
+		try {
+			Turismo turismo = new Turismo(Consola.leerTurismo());
+			controlador.insertar(turismo);
+
+		} catch (Exception e) {
+
+			System.out.println(e.getMessage());
+		}
 	}
 	
 	private void insertarAlquiler() throws Exception {
-		
+
 		Consola.mostrarCabecera("Ha elegido la opción: " + Opcion.INSERTAR_ALQUILER);
-		Alquiler alquiler = new Alquiler(Consola.leerAlquiler());
-		controlador.insertar(alquiler);
+
+		System.out.println("1. Insertar alquiler de nuevo cliente y turismo:"
+				+ " \n2. Insertar alquiler de cliente y turismo ya existentes: ");
+
+		int opcion = Entrada.entero();
+
+		switch (opcion) {
+
+		case 1:
+			try {
+				Alquiler alquiler = new Alquiler(Consola.leerAlquiler());
+				controlador.insertar(alquiler);
+
+			} catch (Exception e) {
+
+				System.out.println(e.getMessage());
+			}
+			
+			break;
+
+		case 2:
+			try {
+				Cliente cliente = controlador.buscar(Consola.leerClienteDni());
+				Turismo turismo = controlador.buscar(Consola.leerTurismoMatricula());
+
+				Alquiler alquiler = new Alquiler(cliente, turismo, Consola.leerFechaAlquiler());
+				controlador.insertar(alquiler);
+
+			} catch (Exception e) {
+
+				System.out.println(e.getMessage());
+			}
+			
+			break;
+		}
 	}
 	
 	private void buscarCliente() {
-		
+
 		Consola.mostrarCabecera("Ha elegido la opción: " + Opcion.BUSCAR_CLIENTE);
-		controlador.buscar(Consola.leerClienteDni());
+
+		try {
+			System.out.println(controlador.buscar(Consola.leerClienteDni()));
+
+		} catch (Exception e) {
+
+			System.out.println(e.getMessage());
+		}
 	}
 	
 	private void buscarTurismo() {
-		
+
 		Consola.mostrarCabecera("Ha elegido la opción: " + Opcion.BUSCAR_TURISMO);
-		controlador.buscar(Consola.leerTurismoMatricula());
+
+		try {
+
+			System.out.println(controlador.buscar(Consola.leerTurismoMatricula()));
+
+		} catch (Exception e) {
+
+			System.out.println(e.getMessage());
+		}
 	}
 	
 	private void buscarAlquiler() {
-		
+
 		Consola.mostrarCabecera("Ha elegido la opción: " + Opcion.BUSCAR_ALQUILER);
-		controlador.buscar(Consola.leerAlquiler());
+
+		System.out.println("1. Buscar por DNI de cliente :\n2. Buscar por matrícula de turismo: ");
+
+		int opcion = Entrada.entero();
+
+		switch (opcion) {
+
+		case 1:
+
+			try {
+
+				Cliente cliente = new Cliente(Consola.leerClienteDni());
+				Turismo turismo = new Turismo("Seat", "León", 1900, "1440FFK");
+				LocalDate fechaAlquiler = LocalDate.of(1990, 1, 1);
+
+				Alquiler alquiler = new Alquiler(cliente, turismo, fechaAlquiler);
+
+				System.out.println(controlador.buscar(alquiler));
+
+			} catch (Exception e) {
+
+				System.out.println(e.getMessage());
+			}
+
+			break;
+
+		case 2:
+
+			try {
+
+				Cliente cliente = new Cliente("Nombre", "75722433Q", "900900900");
+				Turismo turismo = new Turismo(Consola.leerTurismoMatricula());
+				LocalDate fechaAlquiler = LocalDate.of(1990, 1, 1);
+
+				Alquiler alquiler = new Alquiler(cliente, turismo, fechaAlquiler);
+
+				System.out.println(controlador.buscar(alquiler));
+
+			} catch (Exception e) {
+
+				System.out.println(e.getMessage());
+			}
+
+			break;
+		}
 	}
-	
-	private void modificarCliente() throws Exception {
 		
+	private void modificarCliente() throws Exception {
+
 		Consola.mostrarCabecera("Ha elegido la opción: " + Opcion.MODIFICAR_CLIENTE);
-		controlador.modificar(Consola.leerCliente(), Consola.leerNombre(), Consola.leerTelefono());
+
+		try {
+
+			controlador.modificar(Consola.leerClienteDni(), Consola.leerNombre(), Consola.leerTelefono());
+
+		} catch (Exception e) {
+
+			System.out.println(e.getMessage());
+		}
 	}
 	
 	private void devolverAlquiler() throws Exception {
-		
+
 		Consola.mostrarCabecera("Ha elegido la opción: " + Opcion.DEVOLVER_ALQUILER);
-		controlador.devolver(Consola.leerAlquiler(), Consola.leerFechaDevolucion());
+
+		System.out.println("1. Buscar por DNI de cliente :\n2. Buscar por matrícula de turismo: ");
+
+		int opcion = Entrada.entero();
+
+		switch (opcion) {
+
+		case 1:
+
+			try {
+
+				Cliente cliente = new Cliente(Consola.leerClienteDni());
+				Turismo turismo = new Turismo("Seat", "León", 1900, "1440FFK");
+				LocalDate fechaAlquiler = LocalDate.of(1990, 1, 1);
+
+				Alquiler alquiler = new Alquiler(cliente, turismo, fechaAlquiler);
+
+				controlador.devolver(alquiler, Consola.leerFechaDevolucion());
+
+			} catch (Exception e) {
+
+				System.out.println(e.getMessage());
+			}
+
+			break;
+
+		case 2:
+
+			try {
+
+				Cliente cliente = new Cliente("Nombre", "75722433Q", "900900900");
+				Turismo turismo = new Turismo(Consola.leerTurismoMatricula());
+				LocalDate fechaAlquiler = LocalDate.of(1990, 1, 1);
+
+				Alquiler alquiler = new Alquiler(cliente, turismo, fechaAlquiler);
+
+				controlador.devolver(alquiler, Consola.leerFechaDevolucion());
+
+			} catch (Exception e) {
+
+				System.out.println(e.getMessage());
+			}
+
+			break;
+		}
 	}
 	
-	private void borrarCliente() {
-		
+	private void borrarCliente() throws Exception {
+
 		Consola.mostrarCabecera("Ha elegido la opción: " + Opcion.BORRAR_CLIENTE);
-		controlador.buscar(Consola.leerCliente());
+
+		try {
+
+			controlador.borrar(Consola.leerClienteDni());
+
+		} catch (Exception e) {
+
+			System.out.println(e.getMessage());
+		}
 	}
-	
+
 	private void borrarTurismo() throws Exception {
-		
+
 		Consola.mostrarCabecera("Ha elegido la opción: " + Opcion.BORRAR_TURISMO);
-		controlador.borrar(Consola.leerTurismo());
+
+		try {
+
+			controlador.borrar(Consola.leerTurismoMatricula());
+
+		} catch (Exception e) {
+
+			System.out.println(e.getMessage());
+		}
 	}
 	
 	private void borrarAlquiler() throws Exception {
-		
+
 		Consola.mostrarCabecera("Ha elegido la opción: " + Opcion.BORRAR_ALQUILER);
-		controlador.borrar(Consola.leerAlquiler());
+
+		System.out.println("1. Buscar por DNI de cliente: \n2. Buscar por matrícula de turismo: ");
+
+		int opcion = Entrada.entero();
+
+		switch (opcion) {
+
+		case 1:
+
+			try {
+
+				Cliente cliente = new Cliente(Consola.leerClienteDni());
+				Turismo turismo = new Turismo("Seat", "León", 1900, "1440FFK");
+				LocalDate fechaAlquiler = LocalDate.of(1990, 1, 1);
+
+				Alquiler alquiler = new Alquiler(cliente, turismo, fechaAlquiler);
+
+				controlador.borrar(alquiler);
+
+			} catch (Exception e) {
+
+				System.out.println(e.getMessage());
+			}
+
+			break;
+
+		case 2:
+
+			try {
+
+				Cliente cliente = new Cliente("Nombre", "75722433Q", "900900900");
+				Turismo turismo = new Turismo(Consola.leerTurismoMatricula());
+				LocalDate fechaAlquiler = LocalDate.of(1990, 1, 1);
+
+				Alquiler alquiler = new Alquiler(cliente, turismo, fechaAlquiler);
+
+				controlador.borrar(alquiler);
+
+			} catch (Exception e) {
+
+				System.out.println(e.getMessage());
+			}
+
+			break;
+
+		}
 	}
 	
 	private void listarClientes() {
 		
 		Consola.mostrarCabecera("Ha elegido la opción: " + Opcion.LISTAR_CLIENTES);
-		
-		for(int i = 0; i< controlador.getClientes().size(); i++) {
-			System.out.println(controlador.getClientes().get(i));
-		}
+		System.out.println(controlador.getClientes()); 
 	}
 	
 	private void listarTurismos() {
 		
 		Consola.mostrarCabecera("Ha elegido la opción: " + Opcion.LISTAR_TURISMOS);
-		
-		for(int i = 0; i< controlador.getTurismos().size(); i++) {
-			System.out.println(controlador.getTurismos().get(i));
-		}
+		System.out.println(controlador.getTurismos()); 
 	}
 	
 	private void listarAlquileres() {
 		
 		Consola.mostrarCabecera("Ha elegido la opción: " + Opcion.LISTAR_ALQUILERES);
-		
-		for(int i = 0; i< controlador.getAlquileres().size(); i++) {
-			
-			System.out.println(controlador.getAlquileres().get(i));
-		}
+		System.out.println(controlador.getAlquileres()); 
 	}
 	
 	private void listarAlquileresCliente() {
 		
 		Consola.mostrarCabecera("Ha elegido la opción: " + Opcion.LISTAR_ALQUILERES_CLIENTE);
-		controlador.getAlquileres(Consola.leerClienteDni());
-		
+		System.out.println(controlador.getAlquileres(Consola.leerClienteDni()));
 	}
 	
 	private void listarAlquileresTurismo() {
 		
 		Consola.mostrarCabecera("Ha elegido la opción: " + Opcion.LISTAR_ALQUILERES_TURISMO);
-		controlador.getAlquileres(Consola.leerTurismoMatricula());
+		System.out.println(controlador.getAlquileres(Consola.leerTurismoMatricula()));
 	}
 }

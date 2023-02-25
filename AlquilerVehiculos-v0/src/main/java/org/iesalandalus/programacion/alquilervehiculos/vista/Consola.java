@@ -81,8 +81,8 @@ public class Consola {
 		String dni = leerCadena("Introduzca el DNI del cliente");
 		
 		Cliente cliente = new Cliente("Cliente", 
-				dni,
-				"900900900"); 
+				dni,"900900900"); 
+		
 		return cliente; 
 	}
 	
@@ -124,6 +124,13 @@ public class Consola {
 		return alquiler;
 	}
 	
+	public static LocalDate leerFechaAlquiler() {
+		
+		LocalDate fechaAlquiler = leerFecha("Por favor, introduzca la fecha de alquiler del turismo: Día / Mes / Año: "); 
+	
+		return fechaAlquiler; 
+	}
+
 	public static LocalDate leerFechaDevolucion() {
 		
 		LocalDate fechaDevolucion = leerFecha("Por favor, introduzca la fecha de devolución del turismo: Día / Mes / Año: "); 

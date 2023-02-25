@@ -35,19 +35,6 @@ public class Alquiler {
 			setCliente(new Cliente(alquiler.getCliente())); 
 			setTurismo(new Turismo(alquiler.getTurismo())); 
 			setFechaAlquiler(alquiler.getFechaAlquiler()); 
-		
-			boolean error=false; 
-			
-			try {
-
-				error = false;
-				setFechaDevolucion(alquiler.getFechaDevolucion());
-
-			} catch (Exception e) {
-
-				System.out.println(e.getMessage());
-				error = true;
-			} 
 		} 
 	}
 
@@ -124,16 +111,15 @@ public class Alquiler {
 			throw new IllegalArgumentException("ERROR: La fecha de devolución debe ser posterior a la fecha de alquiler.");
 		}
 		
-		if (fechaDevolucion == getFechaDevolucion()) {
-			
-			throw new OperationNotSupportedException("ERROR: La devolución ya estaba registrada.");
-		}
-		
 		this.fechaDevolucion=fechaDevolucion; 
 	}
 	
 	public void devolver(LocalDate fechaDevolucion) throws Exception {
 		
+		if (getFechaDevolucion() != null) {
+			
+			throw new OperationNotSupportedException("ERROR: La devolución ya estaba registrada.");
+		}
 		setFechaDevolucion(fechaDevolucion); 
 	}
 	
